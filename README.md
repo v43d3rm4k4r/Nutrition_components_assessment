@@ -1,2 +1,2 @@
-# Nutrition_components_assessment
+# Nutrition components assessment
 The program calculates the biological value, balance index and other characteristics of the food product based on the entered data...
