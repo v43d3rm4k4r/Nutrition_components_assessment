@@ -1,13 +1,8 @@
-/*Программатор Куприянов Д.К., осень 2019 года.
- Программа производит оценку белковой  и липидной составляющих
- продуктов питания.*/
- /*
- 1.Вводим кол-во компонентов
- 2.Вводим кол-ва белка на 100г каждого компонента (после ввода кол-ва компонентов) (n в формуле)(от 1 до 5, значение от 0 до 100)
- 3.Вводим пропорции компонентов
- 4.Вводим аминокислоты 9 раз для каждого компонента (Xётая в формуле)
- 5.Пересчитываем аминокислоты с продукта на белок
- 4.Вычисляем АКП, С, Аётую, крас, БЦ, R, G
+/*
+Daniil Kuprianov, autumn 2019, Saint-Petersburg.
+
+The program evaluates the protein and lipid components
+food products.
 */
 #include <stdio.h>
 #include <windows.h>
@@ -18,7 +13,7 @@
 #define LIP_PROP 5 // липидные хар-ки (аналог аминокислот)
 #define MAX_COMP 5 // максимальное количество компонентов
 
-// данная версия программы будет запускаться только на флешке
+// Данная версия программы будет запускаться только на флешке
 // и предназначена для тестовой демонстрации
 // #define FLASH_TEST
 //======================================================================================
@@ -30,33 +25,33 @@ double AKP(int comp_num, double * prop, double recount[][AMI], int i);
 // аминокислотный скор
 double Aminoacidskor(double akp, const double fao_voz2007);
 // коэффициент рациональности
-double Koef_Ration(double min_c, double c);
+double Koef_Ration(double min_c, double aminoacidskor);
 // сумма аминокислотных скоров для всех аминокислот
-double C_SUM(double * c);
+double Aminoacidskor_Sum(double * aminoacidskor);
 // коэффициент разбалансированности
-double KRAS(double c_sum, double min_c);
+double KRAS(double aminoacidskor_sum, double min_c);
 // биологическая ценность
-double BC(double kras);
+double Biological_Value(double kras);
 // коэффициент рациональности аминокислотного состава
-double R(double * aj, double * akp);
+double Amino_Acid_Comp_Ratio_Coef(double * koef_ration, double * akp);
 // показатель сопоставимой избыточности
-double G(double * akp, double min_c, const double * fao_voz2007);
+double Comparable_Redundancy_Ratio(double * akp, double min_c, const double * fao_voz2007);
 // продукт с учётом пропорций (жирная кислота на 100г продукта, аналог АКП)
-double K(const double fao_voz2007, double akp);
+double Fatty_Acid_Per_100g(const double fao_voz2007, double akp);
 // коэффициент сбалансированности
-double S(double * k);
+double Balance_Index(double * fatty_acid_per_100g);
 // коэффициент сбалансированности всей белковой составляющей
-double K_general(double s, double bc, double r);
+double Balance_Index_General(double balance_index, double biological_value, double amino_acid_comp_ratio_coef);
 //======================================================================================
 /*ЛИПИДЫ*/
 // пересчёт на 100г жира всех липидных входных данных
-double Recount_lip(int comp_num, int sign, double * lipids, double ultimate);
+double Recount_Lip(int comp_num, int sign, double * lipids, double ultimate);
 // коэффициент рациональности жирной кислоты
-double Ratio_calc(int comp_num, double * prop, double recount_lip[][LIP_PROP], int i);
+double Ratio_Calc(int comp_num, double * prop, double recount_lip[][LIP_PROP], int i);
 // коэффициент сбалансированности
-double Lip_balance_ratio(double fao_voz2008, double recount_lip);
+double Lip_Balance_Ratio(double fao_voz2008, double recount_lip);
 // коэффициент жирнокислотного соответствия
-void Fattyacid_compliance(double * Lip_balance_ratio, double* result1, double* result2);
+void Fattyacid_Compliance(double * lip_balance_ratio, double* result1, double* result2);
 
 int main(void)
 {
@@ -98,9 +93,9 @@ int main(void)
 	/*ДЛЯ РЕЗУЛЬТАТОВ ВЫЧИСЛЕНИЙ*/
 	/*БЕЛКИ*/
 	double akp[AMI] = {0.0};
-	double c[AMI] = {0.0};
-	double aj[AMI] = {0.0};
-	double k[AMI] = {0.0};
+	double aminoacidskor[AMI] = {0.0};
+	double koef_ration[AMI] = {0.0};
+	double fatty_acid_per_100g[AMI] = {0.0};
 	double prop[MAX_COMP] = {0.0}; // для пропорций, если компонентов > 1
 	double recount[MAX_COMP][AMI] = {0.0}; // для пересчёта аминокилот
     /*коэффициент разбалансированности, биологическая ценность,
@@ -108,10 +103,10 @@ int main(void)
     индекс сбалансированности, показатель сопоставимой избыточности и
     коэффициент сбалансированности всей белковой составляющей(вычисляются 1 раз в конце)*/
     double kras = 0.0;
-    double bc = 0.0;
-    double r = 0.0;
-    double g = 0.0;
-    double s = 0.0;
+    double biological_value = 0.0; // bc
+    double amino_acid_comp_ratio_coef = 0.0; // r
+    double сomparable_redundancy_ratio = 0.0; // g
+    double balance_index = 0.0; // s
     double k_general = 0.0;
     int i; // счётчик, номер строки с аминокислотой
 
@@ -504,21 +499,21 @@ int main(void)
         }
 
 		akp[i] = AKP(comp_num, prop, recount, i);
-    	c[i] = Aminoacidskor(akp[i], fao_voz2007[i]);
-        k[i] = K(fao_voz2007[i], akp[i]);
+    	aminoacidskor[i] = Aminoacidskor(akp[i], fao_voz2007[i]);
+        fatty_fcid_per_100g[i] = Fatty_Acid_Per_100g(fao_voz2007[i], akp[i]);
     }
 
-    // в конце находим минимальный 'с' из всех, считаем aj для каждой аминокислоты,
+    // в конце находим минимальный 'с'(aminoacidskor) из всех, считаем aj для каждой аминокислоты,
     // коэффициент рациональности аминокислотного состава и показатель сопоставимой избыточности
     double min_c = 999.0;
     for(i = 0; i < AMI; i++)
     {
-    	if(c[i] < min_c)
-    		min_c = c[i];
+    	if(aminoacidskor[i] < min_c)
+    		min_c = aminoacidskor[i];
     }
     for(i = 0; i < AMI; i++)
     {
-    	aj[i] = Koef_Ration(min_c, c[i]);
+    	koef_ration[i] = Koef_Ration(min_c, aminoacidskor[i]);
     }
     //======================================================================================
     /*ВЫЧИСЛЕНИЯ ЛИПИДОВ*/
@@ -526,38 +521,37 @@ int main(void)
     for(i = 0; i < LIP_PROP; i++)
     {
         if(comp_num == 1)
-            recount_lip[0][i] = Recount_lip(comp_num, 1, lipids, ultimate[0][i]);
+            recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
         if(comp_num == 2)
         {
-            recount_lip[0][i] = Recount_lip(comp_num, 1, lipids, ultimate[0][i]);
-            recount_lip[1][i] = Recount_lip(comp_num, 2, lipids, ultimate[1][i]);
+            recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
+            recount_lip[1][i] = Recount_Lip(comp_num, 2, lipids, ultimate[1][i]);
         }
         if(comp_num == 3)
         {
-            recount_lip[0][i] = Recount_lip(comp_num, 1, lipids, ultimate[0][i]);
-            recount_lip[1][i] = Recount_lip(comp_num, 2, lipids, ultimate[1][i]);
-            recount_lip[2][i] = Recount_lip(comp_num, 3, lipids, ultimate[2][i]);
+            recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
+            recount_lip[1][i] = Recount_Lip(comp_num, 2, lipids, ultimate[1][i]);
+            recount_lip[2][i] = Recount_Lip(comp_num, 3, lipids, ultimate[2][i]);
         }
         if(comp_num == 4)
         {
-            recount_lip[0][i] = Recount_lip(comp_num, 1, lipids, ultimate[0][i]);
-            recount_lip[1][i] = Recount_lip(comp_num, 2, lipids, ultimate[1][i]);
-            recount_lip[2][i] = Recount_lip(comp_num, 3, lipids, ultimate[2][i]);
+            recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
+            recount_lip[1][i] = Recount_Lip(comp_num, 2, lipids, ultimate[1][i]);
+            recount_lip[2][i] = Recount_Lip(comp_num, 3, lipids, ultimate[2][i]);
             recount_lip[3][i] = Recount_lip(comp_num, 4, lipids, ultimate[3][i]);
         }
         if(comp_num == 5)
         {
-            recount_lip[0][i] = Recount_lip(comp_num, 1, lipids, ultimate[0][i]);
-            recount_lip[1][i] = Recount_lip(comp_num, 2, lipids, ultimate[1][i]);
-            recount_lip[2][i] = Recount_lip(comp_num, 3, lipids, ultimate[2][i]);
-            recount_lip[3][i] = Recount_lip(comp_num, 4, lipids, ultimate[3][i]);
-            recount_lip[4][i] = Recount_lip(comp_num, 5, lipids, ultimate[4][i]);
+            recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
+            recount_lip[1][i] = Recount_Lip(comp_num, 2, lipids, ultimate[1][i]);
+            recount_lip[2][i] = Recount_Lip(comp_num, 3, lipids, ultimate[2][i]);
+            recount_lip[3][i] = Recount_Lip(comp_num, 4, lipids, ultimate[3][i]);
+            recount_lip[4][i] = Recount_Lip(comp_num, 5, lipids, ultimate[4][i]);
         }
-        ratio_calc[i] = Ratio_calc(comp_num, prop, recount_lip, i);
-        lip_balance_ratio[i] = Lip_balance_ratio(fao_voz2008[i], ratio_calc[i]);
-        Fattyacid_compliance(lip_balance_ratio, &result1, &result2);
+        ratio_calc[i] = Ratio_Calc(comp_num, prop, recount_lip, i);
+        lip_balance_ratio[i] = Lip_Balance_Ratio(fao_voz2008[i], ratio_calc[i]);
+        Fattyacid_Compliance(lip_balance_ratio, &result1, &result2);
     }
-
 
     //======================================================================================
     /*ВЫВОД АМИНОКИСЛОТ*/
@@ -617,23 +611,23 @@ int main(void)
         }
     	printf("Аминокислота в продукте = %.2f\n"
     	"Аминокислотный скор = %.2f\n"
-    	"Коэффициент рациональности = %.2f\n", akp[i], c[i], aj[i]);
-    	printf("Коэффициент сбалансированности = %.2f\n", k[i]);
-    	puts("=================================================");
+    	"Коэффициент рациональности = %.2f\n", akp[i], aminoacidskor[i], koef_ration[i]);
+    	printf("Коэффициент сбалансированности = %.2f\n", fatty_fcid_per_100g[i]);
+        puts("=================================================");
     }
-    kras = KRAS(C_SUM(c), min_c);
-    bc = BC(kras);
-    r = R(aj, akp);
-    g = G(akp, min_c, fao_voz2007);
-    s = S(k);
-    k_general = K_general(s, bc, r);
+    kras = KRAS(Aminoacidskor_Sum(aminoacidskor), min_c);
+    biological_value = Biological_Value(kras);
+    amino_acid_comp_ratio_coef = Amino_Acid_Comp_Ratio_Coef(koef_ration, akp);
+    сomparable_redundancy_ratio = Comparable_Redundancy_Ratio(akp, min_c, fao_voz2007);
+    balance_index = Balance_Index(fatty_acid_per_100g);
+    k_general = Balance_Index_General(balance_index, biological_value, amino_acid_comp_ratio_coef);
+    puts("==========ОЦЕНКА БЕЛКОВОЙ СОСТАВЛЯЮЩЕЙ:==========\n");
     printf("Коэффициент разбалансированности = %.2f\n", kras);
-    printf("Биологическая ценность = %.2f\n", bc);
-    printf("Коэффициент рациональности аминокислотного состава = %.2f\n", r);
-    printf("Показатель сопоставимой избыточности = %.2f\n", g);
-    printf("Индекс сбалансированности = %.2f\n", s);
-    printf("Коэффициент сбалансированности белковой составляющей = %.2f\n\n", k_general);
-
+    printf("Биологическая ценность = %.2f\n", biological_value);
+    printf("Коэффициент рациональности аминокислотного состава = %.2f\n", amino_acid_comp_ratio_coef);
+    printf("Показатель сопоставимой избыточности = %.2f\n", сomparable_redundancy_ratio);
+    printf("Индекс сбалансированности = %.2f\n", balance_index);
+    printf("Коэффициент сбалансированности белковой составляющей = %.2f\n", k_general);
     puts("=================================================");
     /*ВЫВОД ЛИПИДОВ*/
     for(i = 0; i < LIP_PROP; i++)
@@ -774,7 +768,7 @@ int main(void)
     	printf("Жирных кислот в 100г продукта = %.2f\n", ratio_calc[i]);
     	puts("=================================================");
     }
-
+    puts("==========ОЦЕНКА ЛИПИДНОЙ СОСТАВЛЯЮЩЕЙ:==========\n");
     printf("Коэффициент жирнокислотного соответствия (при i=3) = %.2f\n", result1);
     printf("Коэффициент жирнокислотного соответствия (при i=5) = %.2f\n", result2);
     // добавить что то там от 0 до 1
@@ -844,50 +838,50 @@ double AKP(int comp_num, double * prop, double recount[][AMI], int i)
          + (prop[4] * recount[4][i]);
 }
 //======================================================================================
-double Aminoacidskor(double akp, double fao_voz2007)
+double Aminoacidskor(double akp, const double fao_voz2007)
 {
 	return akp / fao_voz2007 * 100;
 }
 //======================================================================================
-double Koef_Ration(double min_c, double c)
+double Koef_Ration(double min_c, double aminoacidskor)
 {
-	return min_c / c;
+	return min_c / aminoacidskor;
 }
 //======================================================================================
-double C_SUM(double * c)
+double Aminoacidskor_Sum(double * aminoacidskor)
 {
     double sum = 0.0;
     for(int i = 0; i < AMI; i++)
     {
-        sum += *c;
-        c++;
+        sum += *aminoacidskor;
+        aminoacidskor++;
     }
     return sum;
 }
 //======================================================================================
-double KRAS(double c_sum, double min_c)
+double KRAS(double aminoacidskor_sum, double min_c)
 {
-    return (c_sum - (min_c * AMI)) / AMI;
+    return (aminoacidskor_sum - (min_c * AMI)) / AMI;
 }
 //======================================================================================
-double BC(double kras)
+double Biological_Value(double kras)
 {
     return 100 - kras;
 }
 //======================================================================================
-double R(double * aj, double * akp)
+double Amino_Acid_Comp_Ratio_Coef(double * koef_ration, double * akp)
 {
 	double numerator = 0.0; // числитель в формуле
 	double denominator = 0.0; // знаменатель в формуле
 	for(int i = 0; i < AMI; i++)
 	{
-		numerator += aj[i] * akp[i];
+		numerator += koef_ration[i] * akp[i];
 		denominator += akp[i];
 	}
 	return numerator / denominator;
 }
 //======================================================================================
-double G(double * akp, double min_c, const double * fao_voz2007)
+double Comparable_Redundancy_Ratio(double * akp, double min_c, const double * fao_voz2007)
 {
 	double numerator = 0.0;
 	for(int i = 0; i < AMI; i++)
@@ -897,7 +891,7 @@ double G(double * akp, double min_c, const double * fao_voz2007)
 	return numerator / (min_c / 100);
 }
 //======================================================================================
-double K(double fao_voz2007, double akp)
+double Fatty_Acid_Per_100g(const double fao_voz2007, double akp)
 {
     if(fao_voz2007 <= akp)
         return fao_voz2007 / akp;
@@ -905,26 +899,26 @@ double K(double fao_voz2007, double akp)
         return akp / fao_voz2007;
 }
 //======================================================================================
-double S(double * k)
+double Balance_Index(double * fatty_acid_per_100g)
 {
     double temp = 1.0;
     for(int i = 0; i < AMI; i++)
     {
-        temp *= k[i];
+        temp *= fatty_acid_per_100g[i];
     }
     return pow(temp, 1.0/9.0);
 }
 //======================================================================================
-double K_general(double s, double bc, double r)
+double Balance_Index_General(double balance_index, double biological_value, double amino_acid_comp_ratio_coef)
 {
-    double temp = (s / 1) * (bc / 100) * (r / 1);
+    double temp = (balance_index / 1) * (biological_value / 100) * (amino_acid_comp_ratio_coef / 1);
     return pow(temp, 1.0/3.0);
 }
 //======================================================================================
 //======================================================================================
 //======================================================================================
 /*ЛИПИДЫ*/
-double Recount_lip(int comp_num, int sign, double * lipids, double ultimate)
+double Recount_Lip(int comp_num, int sign, double * lipids, double ultimate)
 {
         if(comp_num == 1)
             return ultimate * 100 / lipids[0];
@@ -962,7 +956,7 @@ double Recount_lip(int comp_num, int sign, double * lipids, double ultimate)
             return ultimate * 100 / lipids[4];
 }
 //======================================================================================
-double Ratio_calc(int comp_num, double * prop, double recount_lip[][LIP_PROP], int i)
+double Ratio_Calc(int comp_num, double * prop, double recount_lip[][LIP_PROP], int i)
 {
 	if(comp_num == 1)
         return recount_lip[0][i];
@@ -978,7 +972,7 @@ double Ratio_calc(int comp_num, double * prop, double recount_lip[][LIP_PROP], i
          + (prop[3] * recount_lip[3][i]) + (prop[4] * recount_lip[4][i]);
 }
 //======================================================================================
-double Lip_balance_ratio(double fao_voz2008, double recount_lip)
+double Lip_Balance_Ratio(double fao_voz2008, double recount_lip)
 {
 	if(recount_lip <= fao_voz2008)
 		return recount_lip / fao_voz2008;
@@ -986,13 +980,14 @@ double Lip_balance_ratio(double fao_voz2008, double recount_lip)
 		return fao_voz2008 / recount_lip;
 }
 //======================================================================================
-void Fattyacid_compliance(double * Lip_balance_ratio, double* result1, double* result2)
+void Fattyacid_Compliance(double * lip_balance_ratio, double* result1, double* result2)
 {
-	double multi1, multi2 = 1.0;
+	double multi1, multi2;
+	multi1 = multi2 = 1.0;
 	for(int i = 0; i < 3; i++)
-        multi1 *= Lip_balance_ratio[i];
+        multi1 *= lip_balance_ratio[i];
     *result1 = pow(multi1, 1.0 / 3.0);
 	for(int i = 0; i < LIP_PROP; i++)
-        multi2 *= Lip_balance_ratio[i];
+        multi2 *= lip_balance_ratio[i];
     *result2 = pow(multi2, 1.0 / 5.0);
 }
