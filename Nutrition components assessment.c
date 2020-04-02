@@ -8,6 +8,7 @@ food products.
 #include <windows.h>
 #include <math.h>
 #include <stdlib.h>
+#include <locale.h>
 
 #define AMI 9 // количество аминокислот
 #define LIP_PROP 5 // липидные хар-ки (аналог аминокислот)
@@ -56,6 +57,8 @@ void Fattyacid_Compliance(double * lip_balance_ratio, double* result1, double* r
 int main(void)
 {
 	SetConsoleCP(1251);SetConsoleOutputCP(1251);
+	SetConsoleTitle("NUTRITION COMPONENTS ASSESSMENT");
+
 	#ifdef FLASH_TEST
 	int is_flash = GetDriveType(NULL); // NULL подразумевает что проверяется текущий носитель
 	if(is_flash != 2)
@@ -64,6 +67,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     #endif // FLASH_TEST
+
     int ans = 0;
     system("color 70");
     puts("По всем вопросам - vaedermakar@mail.ru.\n");
@@ -84,10 +88,10 @@ int main(void)
     мононенасыщенные жирные кислоты, полиненасыщенные жирные кислоты, омега3 и омега6.
     Это сделано для того чтобы передать один двумерный массив в функцию вместо 5 обычных.
     [0] - насыщенные жирные кислоты
-    [1] - мононенасыщенные жирные кислоты
+    [1] - мононасыщенные жирные кислоты
     [2] - полиненасыщенные жирные кислоты
-    [3] - омега3
-    [4] - омега6*/
+    [3] - омега6
+    [4] - омега3*/
     double ultimate[MAX_COMP][LIP_PROP] = {0.0};
 
 	/*ДЛЯ РЕЗУЛЬТАТОВ ВЫЧИСЛЕНИЙ*/
@@ -105,7 +109,7 @@ int main(void)
     double kras = 0.0;
     double biological_value = 0.0; // bc
     double amino_acid_comp_ratio_coef = 0.0; // r
-    double сomparable_redundancy_ratio = 0.0; // g
+    double comparable_redundancy_ratio = 0.0; // g
     double balance_index = 0.0; // s
     double k_general = 0.0;
     int i; // счётчик, номер строки с аминокислотой
@@ -384,10 +388,10 @@ int main(void)
     //======================================================================================
    /*ввод:
     [0] - насыщенные жирные кислоты
-    [1] - мононенасыщенные жирные кислоты
+    [1] - мононасыщенные жирные кислоты
     [2] - полиненасыщенные жирные кислоты
-    [3] - омега3
-    [4] - омега6*/
+    [3] - омега6
+    [4] - омега3*/
     for(i = 0; i < LIP_PROP; i++)
     {
         if(comp_num > 1 && i == 0)
@@ -397,9 +401,9 @@ int main(void)
         if(comp_num > 1 && i == 2)
             puts("Введите кол-во полиненасыщенных жирных кислот на 100г каждого компонента:");
         if(comp_num > 1 && i == 3)
-            puts("Введите омега-3 на 100г каждого компонента:");
-        if(comp_num > 1 && i == 4)
             puts("Введите омега-6 на 100г каждого компонента:");
+        if(comp_num > 1 && i == 4)
+            puts("Введите омега-3 на 100г каждого компонента:");
         if(comp_num == 1)
         {
             if(i == 0)
@@ -409,9 +413,9 @@ int main(void)
             if(i == 2)
                 puts("Введите кол-во полиненасыщенных жирных кислот на 100г компонента:");
             if(i == 3)
-                puts("Введите кол-во омега-3 на 100г компонента:");
-            if(i == 4)
                 puts("Введите кол-во омега-6 на 100г компонента:");
+            if(i == 4)
+                puts("Введите кол-во омега-3 на 100г компонента:");
 
             while(scanf(" %lf", &ultimate[0][i]) != 1 || ultimate[0][i] < 0.0 || ultimate[0][i] > 100.0)
             {
@@ -500,7 +504,7 @@ int main(void)
 
 		akp[i] = AKP(comp_num, prop, recount, i);
     	aminoacidskor[i] = Aminoacidskor(akp[i], fao_voz2007[i]);
-        fatty_fcid_per_100g[i] = Fatty_Acid_Per_100g(fao_voz2007[i], akp[i]);
+        fatty_acid_per_100g[i] = Fatty_Acid_Per_100g(fao_voz2007[i], akp[i]);
     }
 
     // в конце находим минимальный 'с'(aminoacidskor) из всех, считаем aj для каждой аминокислоты,
@@ -538,7 +542,7 @@ int main(void)
             recount_lip[0][i] = Recount_Lip(comp_num, 1, lipids, ultimate[0][i]);
             recount_lip[1][i] = Recount_Lip(comp_num, 2, lipids, ultimate[1][i]);
             recount_lip[2][i] = Recount_Lip(comp_num, 3, lipids, ultimate[2][i]);
-            recount_lip[3][i] = Recount_lip(comp_num, 4, lipids, ultimate[3][i]);
+            recount_lip[3][i] = Recount_Lip(comp_num, 4, lipids, ultimate[3][i]);
         }
         if(comp_num == 5)
         {
@@ -612,22 +616,34 @@ int main(void)
     	printf("Аминокислота в продукте = %.2f\n"
     	"Аминокислотный скор = %.2f\n"
     	"Коэффициент рациональности = %.2f\n", akp[i], aminoacidskor[i], koef_ration[i]);
-    	printf("Коэффициент сбалансированности = %.2f\n", fatty_fcid_per_100g[i]);
+    	printf("Коэффициент сбалансированности = %.2f\n", fatty_acid_per_100g[i]);
         puts("=================================================");
     }
     kras = KRAS(Aminoacidskor_Sum(aminoacidskor), min_c);
     biological_value = Biological_Value(kras);
     amino_acid_comp_ratio_coef = Amino_Acid_Comp_Ratio_Coef(koef_ration, akp);
-    сomparable_redundancy_ratio = Comparable_Redundancy_Ratio(akp, min_c, fao_voz2007);
+    comparable_redundancy_ratio = Comparable_Redundancy_Ratio(akp, min_c, fao_voz2007);
     balance_index = Balance_Index(fatty_acid_per_100g);
     k_general = Balance_Index_General(balance_index, biological_value, amino_acid_comp_ratio_coef);
     puts("==========ОЦЕНКА БЕЛКОВОЙ СОСТАВЛЯЮЩЕЙ:==========\n");
     printf("Коэффициент разбалансированности = %.2f\n", kras);
     printf("Биологическая ценность = %.2f\n", biological_value);
     printf("Коэффициент рациональности аминокислотного состава = %.2f\n", amino_acid_comp_ratio_coef);
-    printf("Показатель сопоставимой избыточности = %.2f\n", сomparable_redundancy_ratio);
+    printf("Показатель сопоставимой избыточности = %.2f\n", comparable_redundancy_ratio);
     printf("Индекс сбалансированности = %.2f\n", balance_index);
     printf("Коэффициент сбалансированности белковой составляющей = %.2f\n", k_general);
+
+    if(k_general >= 0.0 && k_general <= 0.2)
+        printf("Вербально-числовая шкала Харрингтона - очень низкая\n");
+    if(k_general > 0.2 && k_general <= 0.37)
+        printf("Вербально-числовая шкала Харрингтона - низкая\n");
+    if(k_general > 0.37 && k_general <= 0.64)
+        printf("Вербально-числовая шкала Харрингтона - средняя\n");
+    if(k_general > 0.64 && k_general <= 0.8)
+        printf("Вербально-числовая шкала Харрингтона - высокая\n");
+    if(k_general > 0.8 && k_general <= 1.0)
+        printf("Вербально-числовая шкала Харрингтона - очень высокая\n");
+
     puts("=================================================");
     /*ВЫВОД ЛИПИДОВ*/
     for(i = 0; i < LIP_PROP; i++)
@@ -639,9 +655,9 @@ int main(void)
         if(comp_num == 1 && i == 2)
             printf("Полиненасыщенных жирных кислот = %.2f\n", recount_lip[0][i]);
         if(comp_num == 1 && i == 3)
-            printf("Омега-3 = %.2f\n", recount_lip[0][i]);
-        if(comp_num == 1 && i == 4)
             printf("Омега-6 = %.2f\n", recount_lip[0][i]);
+        if(comp_num == 1 && i == 4)
+            printf("Омега-3 = %.2f\n", recount_lip[0][i]);
 
         if(comp_num == 2)
         {
@@ -658,12 +674,12 @@ int main(void)
                        "Полиненасыщенных жирных кислот в 2 компоненте = %.2f\n",
                         recount_lip[0][i], recount_lip[1][i]);
             if(i == 3)
-                printf("Омега-3 в 1 компоненте = %.2f\n"
-                       "Омега-3 в 2 компоненте = %.2f\n",
-                        recount_lip[0][i], recount_lip[1][i]);
-            if(i == 4)
                 printf("Омега-6 в 1 компоненте = %.2f\n"
                        "Омега-6 в 2 компоненте = %.2f\n",
+                        recount_lip[0][i], recount_lip[1][i]);
+            if(i == 4)
+                printf("Омега-3 в 1 компоненте = %.2f\n"
+                       "Омега-3 в 2 компоненте = %.2f\n",
                         recount_lip[0][i], recount_lip[1][i]);
         }
         if(comp_num == 3)
@@ -684,14 +700,14 @@ int main(void)
                    "Полиненасыщенных жирных кислот в 3 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
 			if(i == 3)
-			printf("Омега-3 в 1 компоненте = %.2f\n"
-                   "Омега-3 в 2 компоненте = %.2f\n"
-                   "Омега-3 в 3 компоненте = %.2f\n",
-                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
-			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n",
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
+			if(i == 4)
+			printf("Омега-3 в 1 компоненте = %.2f\n"
+                   "Омега-3 в 2 компоненте = %.2f\n"
+                   "Омега-3 в 3 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
         }
         if(comp_num == 4)
@@ -715,16 +731,16 @@ int main(void)
                    "Полиненасыщенных жирных кислот в 4 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
 			if(i == 3)
-			printf("Омега-3 в 1 компоненте = %.2f\n"
-                   "Омега-3 в 2 компоненте = %.2f\n"
-                   "Омега-3 в 3 компоненте = %.2f\n"
-                   "Омега-3 в 4 компоненте = %.2f\n",
-                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
-			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n"
                    "Омега-6 в 4 компоненте = %.2f\n",
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
+			if(i == 4)
+			printf("Омега-3 в 1 компоненте = %.2f\n"
+                   "Омега-3 в 2 компоненте = %.2f\n"
+                   "Омега-3 в 3 компоненте = %.2f\n"
+                   "Омега-3 в 4 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
         }
        if(comp_num == 5)
@@ -751,18 +767,18 @@ int main(void)
                    "Полиненасыщенных жирных кислот в 5 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
 			if(i == 3)
-			printf("Омега-3 в 1 компоненте = %.2f\n"
-                   "Омега-3 в 2 компоненте = %.2f\n"
-                   "Омега-3 в 3 компоненте = %.2f\n"
-                   "Омега-3 в 4 компоненте = %.2f\n"
-                   "Омега-3 в 5 компоненте = %.2f\n",
-                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
-			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n"
                    "Омега-6 в 4 компоненте = %.2f\n"
                    "Омега-6 в 5 компоненте = %.2f\n",
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
+			if(i == 4)
+			printf("Омега-3 в 1 компоненте = %.2f\n"
+                   "Омега-3 в 2 компоненте = %.2f\n"
+                   "Омега-3 в 3 компоненте = %.2f\n"
+                   "Омега-3 в 4 компоненте = %.2f\n"
+                   "Омега-3 в 5 компоненте = %.2f\n",
                    	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
         }
     	printf("Жирных кислот в 100г продукта = %.2f\n", ratio_calc[i]);
@@ -771,7 +787,29 @@ int main(void)
     puts("==========ОЦЕНКА ЛИПИДНОЙ СОСТАВЛЯЮЩЕЙ:==========\n");
     printf("Коэффициент жирнокислотного соответствия (при i=3) = %.2f\n", result1);
     printf("Коэффициент жирнокислотного соответствия (при i=5) = %.2f\n", result2);
-    // добавить что то там от 0 до 1
+
+    if(result1 >= 0.0 && result1 <= 0.2)
+        printf("Вербально-числовая шкала Харрингтона (при i=3) - очень низкая\n");
+    if(result1 > 0.2 &&result1 <= 0.37)
+        printf("Вербально-числовая шкала Харрингтона (при i=3) - низкая\n");
+    if(result1 > 0.37 && result1 <= 0.64)
+        printf("Вербально-числовая шкала Харрингтона (при i=3) - средняя\n");
+    if(result1 > 0.64 && result1 <= 0.8)
+        printf("Вербально-числовая шкала Харрингтона (при i=3) - высокая\n");
+    if(result1 > 0.8 && result1 <= 1.0)
+        printf("Вербально-числовая шкала Харрингтона (при i=3) - очень высокая\n");
+
+    if(result2 >= 0.0 && result2 <= 0.2)
+        printf("Вербально-числовая шкала Харрингтона (при i=5) - очень низкая\n");
+    if(result2 > 0.2 &&result2 <= 0.37)
+        printf("Вербально-числовая шкала Харрингтона (при i=5) - низкая\n");
+    if(result2 > 0.37 && result2 <= 0.64)
+        printf("Вербально-числовая шкала Харрингтона (при i=5) - средняя\n");
+    if(result2 > 0.64 && result2 <= 0.8)
+        printf("Вербально-числовая шкала Харрингтона (при i=5) - высокая\n");
+    if(result2 > 0.8 && result2 <= 1.0)
+        printf("Вербально-числовая шкала Харрингтона (при i=5) - очень высокая\n");
+
 	puts("=================================================");
     printf("Хотите повторить расчёты? Введите 0 если нет и любое другое число если да:\n>");
     scanf(" %d", &ans);
