@@ -648,23 +648,23 @@ int main(void)
             if(i == 0)
                 printf("Насыщенных жирных кислот в 1 компоненте = %.2f\n"
                        "Насыщенных жирных кислот в 2 компоненте = %.2f\n",
-                        recount[0][i], recount[1][i]);
+                        recount_lip[0][i], recount_lip[1][i]);
             if(i == 1)
                 printf("Мононасыщенных жирных кислот в 1 компоненте = %.2f\n"
                        "Мононасыщенных жирных кислот в 2 компоненте = %.2f\n",
-                        recount[0][i], recount[1][i]);
+                        recount_lip[0][i], recount_lip[1][i]);
             if(i == 2)
                 printf("Полиненасыщенных жирных кислот в 1 компоненте = %.2f\n"
                        "Полиненасыщенных жирных кислот в 2 компоненте = %.2f\n",
-                        recount[0][i], recount[1][i]);
+                        recount_lip[0][i], recount_lip[1][i]);
             if(i == 3)
                 printf("Омега-3 в 1 компоненте = %.2f\n"
                        "Омега-3 в 2 компоненте = %.2f\n",
-                        recount[0][i], recount[1][i]);
+                        recount_lip[0][i], recount_lip[1][i]);
             if(i == 4)
                 printf("Омега-6 в 1 компоненте = %.2f\n"
                        "Омега-6 в 2 компоненте = %.2f\n",
-                        recount[0][i], recount[1][i]);
+                        recount_lip[0][i], recount_lip[1][i]);
         }
         if(comp_num == 3)
         {
@@ -672,27 +672,27 @@ int main(void)
             printf("Насыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 3 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
         	if(i == 1)
 			printf("Мононасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 3 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
 			if(i == 2)
 			printf("Полиненасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 3 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
 			if(i == 3)
 			printf("Омега-3 в 1 компоненте = %.2f\n"
                    "Омега-3 в 2 компоненте = %.2f\n"
                    "Омега-3 в 3 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
 			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i]);
         }
         if(comp_num == 4)
         {
@@ -701,31 +701,31 @@ int main(void)
                    "Насыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 4 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
         	if(i == 1)
 			printf("Мононасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 4 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
 			if(i == 2)
 			printf("Полиненасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 4 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
 			if(i == 3)
 			printf("Омега-3 в 1 компоненте = %.2f\n"
                    "Омега-3 в 2 компоненте = %.2f\n"
                    "Омега-3 в 3 компоненте = %.2f\n"
                    "Омега-3 в 4 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
 			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n"
                    "Омега-6 в 4 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i]);
         }
        if(comp_num == 5)
         {
@@ -735,35 +735,35 @@ int main(void)
                    "Насыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 4 компоненте = %.2f\n"
                    "Насыщенных жирных кислот в 5 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i], recount[4][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
         	if(i == 1)
 			printf("Мононасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 4 компоненте = %.2f\n"
                    "Мононасыщенных жирных кислот в 5 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i], recount[4][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
 			if(i == 2)
 			printf("Полиненасыщенных жирных кислот в 1 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 2 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 3 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 4 компоненте = %.2f\n"
                    "Полиненасыщенных жирных кислот в 5 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i], recount[4][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
 			if(i == 3)
 			printf("Омега-3 в 1 компоненте = %.2f\n"
                    "Омега-3 в 2 компоненте = %.2f\n"
                    "Омега-3 в 3 компоненте = %.2f\n"
                    "Омега-3 в 4 компоненте = %.2f\n"
                    "Омега-3 в 5 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i], recount[4][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
 			if(i == 4)
 			printf("Омега-6 в 1 компоненте = %.2f\n"
                    "Омега-6 в 2 компоненте = %.2f\n"
                    "Омега-6 в 3 компоненте = %.2f\n"
                    "Омега-6 в 4 компоненте = %.2f\n"
                    "Омега-6 в 5 компоненте = %.2f\n",
-                   	recount[0][i], recount[1][i], recount[2][i], recount[3][i], recount[4][i]);
+                   	recount_lip[0][i], recount_lip[1][i], recount_lip[2][i], recount_lip[3][i], recount_lip[4][i]);
         }
     	printf("Жирных кислот в 100г продукта = %.2f\n", ratio_calc[i]);
     	puts("=================================================");
@@ -832,10 +832,11 @@ double AKP(int comp_num, double * prop, double recount[][AMI], int i)
     if(comp_num == 3)
         return (prop[0] * recount[0][i]) + (prop[1] * recount[1][i]) + (prop[2] * recount[2][i]);
     if(comp_num == 4)
-        return (prop[0] * recount[0][i]) + (prop[1] * recount[1][i]) + (prop[2] * recount[2][i]) + (prop[3] * recount[3][i]);
+        return (prop[0] * recount[0][i]) + (prop[1] * recount[1][i]) + (prop[2] * recount[2][i])
+        + (prop[3] * recount[3][i]);
     if(comp_num == 5)
-        return (prop[0] * recount[0][i]) + (prop[1] * recount[1][i]) + (prop[2] * recount[2][i]) + (prop[3] * recount[3][i])
-         + (prop[4] * recount[4][i]);
+        return (prop[0] * recount[0][i]) + (prop[1] * recount[1][i]) + (prop[2] * recount[2][i])
+        + (prop[3] * recount[3][i]) + (prop[4] * recount[4][i]);
 }
 //======================================================================================
 double Aminoacidskor(double akp, const double fao_voz2007)
