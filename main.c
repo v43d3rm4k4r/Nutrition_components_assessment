@@ -1,9 +1,9 @@
-/*
-Daniil Kuprianov, autumn 2019, Saint-Petersburg.
-
-The program evaluates the protein and lipid components
-        food products.
-            */
+/**
+ * @file     main.c
+ * @Author   Daniil Kuprianov (vaedermakar@mail.ru)
+ * @date     September, 2019
+ * @brief    The program evaluates the protein and lipid components food products
+ */
 #include <stdio.h>
 #include <windows.h>
 #include <math.h>

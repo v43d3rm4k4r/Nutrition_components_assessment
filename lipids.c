@@ -1,5 +1,12 @@
 #include "declarations.h"
 
+/**
+ * @file     lipids.c
+ * @Author   Daniil Kuprianov (vaedermakar@mail.ru)
+ * @date     September, 2019
+ * @brief    lipids definitions of the program
+ */
+
 double Recount_Lip(const int comp_num, const int sign, const double * lipids, const double ultimate)
 {
     if(comp_num == 1)

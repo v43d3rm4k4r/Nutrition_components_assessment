@@ -1,5 +1,12 @@
 #pragma once
 
+/**
+ * @file     declarations.h
+ * @Author   Daniil Kuprianov (vaedermakar@mail.ru)
+ * @date     September, 2019
+ * @brief    declarations of the program
+ */
+
 #define AMI 9 // количество аминокислот
 #define LIP_PROP 5 // липидные хар-ки (аналог аминокислот)
 #define MAX_COMP 5 // максимальное количество компонентов

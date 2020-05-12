@@ -1,5 +1,12 @@
 #include "declarations.h"
 
+/**
+ * @file     proteins.c
+ * @Author   Daniil Kuprianov (vaedermakar@mail.ru)
+ * @date     September, 2019
+ * @brief    proteins definitions of the program
+ */
+
 // переменная sign даёт понять функции, какой именно компонент требуется
 // пересчитать во время её текущего вызова
 double Recount(const int comp_num, const int sign, const double * protein, const double comp)
