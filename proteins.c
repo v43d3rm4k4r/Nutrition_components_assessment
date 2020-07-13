@@ -9,7 +9,7 @@
 
 // переменная sign даёт понять функции, какой именно компонент требуется
 // пересчитать во время её текущего вызова
-double Recount(const int comp_num, const int sign, const double * protein, const double comp)
+double Recount(int comp_num, int sign, const double * protein, const double comp)
 {
     if(comp_num == 1)
         return comp * 100 / protein[0];
@@ -47,7 +47,7 @@ double Recount(const int comp_num, const int sign, const double * protein, const
         return comp * 100 / protein[4];
 }
 //======================================================================================
-double AKP(const int comp_num, const double * prop, const double recount[][AMI], int i)
+double AKP(int comp_num, const double * prop, const double recount[][AMI], int i)
 {
     if(comp_num == 1)
         return recount[0][i];
@@ -68,7 +68,7 @@ double Aminoacidskor(const double akp, const double fao_voz2007)
     return akp / fao_voz2007 * 100;
 }
 //======================================================================================
-double Koef_Ration(const double min_c, const double aminoacidskor)
+double Koef_Ration(double min_c, const double aminoacidskor)
 {
     return min_c / aminoacidskor;
 }
@@ -84,7 +84,7 @@ double Aminoacidskor_Sum(const double * aminoacidskor)
     return sum;
 }
 //======================================================================================
-double KRAS(const double aminoacidskor_sum, const double min_c)
+double KRAS(const double aminoacidskor_sum, double min_c)
 {
     return (aminoacidskor_sum - (min_c * AMI)) / AMI;
 }
@@ -106,7 +106,7 @@ double Amino_Acid_Comp_Ratio_Coef(const double * koef_ration, const double * akp
     return numerator / denominator;
 }
 //======================================================================================
-double Comparable_Redundancy_Ratio(const double * akp, const double min_c, const double * fao_voz2007)
+double Comparable_Redundancy_Ratio(const double * akp, double min_c, const double * fao_voz2007)
 {
     double numerator = 0.0;
     for(int i = 0; i < AMI; i++)

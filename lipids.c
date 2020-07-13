@@ -7,7 +7,7 @@
  * @brief    lipids definitions of the program
  */
 
-double Recount_Lip(const int comp_num, const int sign, const double * lipids, const double ultimate)
+double Recount_Lip(int comp_num, int sign, const double * lipids, const double ultimate)
 {
     if(comp_num == 1)
         return ultimate * 100 / lipids[0];
@@ -45,7 +45,7 @@ double Recount_Lip(const int comp_num, const int sign, const double * lipids, co
         return ultimate * 100 / lipids[4];
 }
 //======================================================================================
-double Ratio_Calc(const int comp_num, const double* prop, const double recount_lip[][LIP_PROP], const int i)
+double Ratio_Calc(int comp_num, const double* prop, const double recount_lip[][LIP_PROP], int i)
 {
     if(comp_num == 1)
         return recount_lip[0][i];
